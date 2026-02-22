@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 7 - La pluie continue de tomber</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .slide-container {
+            position: relative;
+            padding-top: 80px;
+            text-align: center;
+        }
+
+        .slide-image {
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(89, 61, 31, 0.3);
+            padding: 10px;
+        }
+
+        .choice-button {
+            background-color: #5a3d1f;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px auto;
+            font-weight: bold;
+            display: block;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .choice-button:hover {
+            background-color: #d4af37;
+            color: #121212;
+        }
+
+        #result {
+            display: none;
+            text-align: center;
+            margin: 20px auto;
+            color: #d4af37;
+            font-size: 1.2em;
+        }
+
+        .fire-icon, .lance-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 5px;
+            border-radius: 50%;
+            border: 1px solid #d4af37;
+            background-color: rgba(89, 61, 31, 0.3);
+            display: inline-block;
+        }
+
+        .fire-icon img, .lance-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        #game-over-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            flex-direction: column;
+        }
+
+        #game-over-image {
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(89, 61, 31, 0.3);
+            padding: 10px;
+        }
+
+        #game-over-text {
+            color: #d4af37;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .restart-button {
+            background-color: #5a3d1f;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px auto;
+            font-weight: bold;
+            display: block;
+        }
+
+        #lance-reparee-image {
+            display: none;
+            max-width: 200px;
+            margin: 20px auto;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(89, 61, 31, 0.3);
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Barre des critères en haut -->
+        <div class="criteria-bar" id="criteriaBar">
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/force.jpg" alt="Force">
+                </div>
+                <span class="score" id="forceScore">2</span>
+            </div>
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/faim.jpg" alt="Faim">
+                </div>
+                <span class="score" id="faimScore">2</span>
+            </div>
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/intelligence.jpg" alt="Intelligence">
+                </div>
+                <span class="score" id="intelligenceScore">0</span>
+            </div>
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/vitalite.jpg" alt="Vitalité">
+                </div>
+                <span class="score" id="vitaliteScore">2</span>
+            </div>
+            <!-- Icône pour le feu -->
+            <div class="criteria-item-top" id="fireItem" style="display: none;">
+                <div class="fire-icon">
+                    <img src="images/feu.jpg" alt="Feu">
+                </div>
+            </div>
+            <!-- Icône pour la lance réparée -->
+            <div class="criteria-item-top" id="lanceItem" style="display: none;">
+                <div class="lance-icon">
+                    <img src="images/lance_reparee.jpg" alt="Lance Réparée">
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenu initial -->
+        <div id="initialContent">
+            <h1>La pluie continue de tomber...</h1>
+            <img class="slide-image" src="images/foret_pluie.jpg" alt="Forêt sous la pluie">
+            <p>Vous décidez d'explorer la grotte mais vous entendez un grognement qui vient du fond de celle-ci.</p>
+            <p>Vous découvrez une pierre métallique. Que faites-vous ?</p>
+            <button class="choice-button" onclick="makeChoice(1)">
+                Vous restez.
+            </button>
+            <button class="choice-button" onclick="makeChoice(2)">
+                Vous continuez à explorer.
+            </button>
+        </div>
+
+        <!-- Image de la lance réparée -->
+        <img id="lance-reparee-image" src="images/lance_reparee.jpg" alt="Lance Réparée">
+
+        <!-- Contenu résultat (caché au départ) -->
+        <div id="result"></div>
+    </div>
+
+    <!-- Conteneur pour le Game Over -->
+    <div id="game-over-container">
+        <div id="game-over-text">Tu es mort !!!</div>
+        <img id="game-over-image" src="images/mort_personnage.jpg" alt="Game Over">
+        <button class="restart-button" onclick="window.location.href='slide4.html'">
+            Recommencer
+        </button>
+    </div>
+
+    <script>
+        // Récupère les scores et l'état du feu depuis l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("forceScore").textContent = urlParams.get('force') || '2';
+        document.getElementById("faimScore").textContent = urlParams.get('faim') || '2';
+        document.getElementById("intelligenceScore").textContent = urlParams.get('intelligence') || '0';
+        document.getElementById("vitaliteScore").textContent = urlParams.get('vitalite') || '2';
+
+        // Vérifie si le joueur a le feu
+        if (urlParams.get('feu') === 'true') {
+            document.getElementById("fireItem").style.display = "flex";
+        }
+
+        // Vérifie le Game Over au chargement de la page
+        let force = parseInt(document.getElementById("forceScore").textContent);
+        let faim = parseInt(document.getElementById("faimScore").textContent);
+        let vitalite = parseInt(document.getElementById("vitaliteScore").textContent);
+        checkGameOver(force, faim, vitalite);
+
+        function makeChoice(choice) {
+            const resultDiv = document.getElementById("result");
+            const initialContentDiv = document.getElementById("initialContent");
+            const lanceRepareeImage = document.getElementById("lance-reparee-image");
+
+            // Cache le contenu initial
+            initialContentDiv.style.display = "none";
+
+            // Affiche le résultat
+            resultDiv.style.display = "block";
+
+            // Met à jour les scores selon le choix
+            force = parseInt(document.getElementById("forceScore").textContent);
+            faim = parseInt(document.getElementById("faimScore").textContent);
+            let intelligence = parseInt(document.getElementById("intelligenceScore").textContent);
+            vitalite = parseInt(document.getElementById("vitaliteScore").textContent);
+            let feu = urlParams.get('feu') === 'true';
+
+            if (choice === 1) {
+                if (intelligence >= 1) {
+                    resultDiv.innerHTML = "<p>Vous pouvez désormais faire du feu.</p>";
+                } else {
+                    resultDiv.innerHTML = "<p>Vous n'avez pas assez d'intelligence pour utiliser les outils.</p>";
+                }
+            } else if (choice === 2) {
+                if (feu) {
+                    resultDiv.innerHTML = "<p>Vous apercevez une grosse silhouette dans le fond de la grotte et fuyez. Vous récupérez la pierre et une liane. Vous pouvez désormais réparer votre lance.</p>";
+                    document.getElementById("lanceItem").style.display = "flex";
+                    lanceRepareeImage.style.display = "block";
+                } else {
+                    resultDiv.innerHTML = "<p>Sans feu, vous avancez et tombez nez à nez avec un gros ours. Mal luné, il vous donne un coup de patte et vous fuyez. Vous perdez un jeton force et vitalité.</p>";
+                    force -= 1;
+                    vitalite -= 1;
+                }
+            }
+
+            // Met à jour les scores affichés
+            document.getElementById("forceScore").textContent = force;
+            document.getElementById("vitaliteScore").textContent = vitalite;
+
+            // Vérifie le Game Over
+            checkGameOver(force, faim, vitalite);
+
+            // Affiche un bouton pour continuer avec les scores dans l'URL
+            let lance = document.getElementById("lanceItem").style.display === "flex" ? 'true' : 'false';
+            resultDiv.innerHTML += `<button class="choice-button" onclick="window.location.href='slide8.html?force=${force}&faim=${faim}&intelligence=${intelligence}&vitalite=${vitalite}&feu=${feu}&lance=${lance}'">Continuer</button>`;
+        }
+
+        function checkGameOver(force, faim, vitalite) {
+            if (force <= 0 || faim <= 0 || vitalite <= 0) {
+                document.getElementById("game-over-container").style.display = "flex";
+            }
+        }
+    </script>
+</body>
+</html>

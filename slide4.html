@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 4 - Début de l'aventure</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .slide-container {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #animation-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        #zoom-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(2);
+            transition: transform 3s ease-in-out;
+        }
+
+        #bonne-aventure {
+            position: absolute;
+            color: #d4af37;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            z-index: 101;
+            opacity: 0;
+            transition: opacity 1s ease-in-out 2.5s;
+        }
+
+        #game-over-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            flex-direction: column;
+        }
+
+        #game-over-image {
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(89, 61, 31, 0.3);
+            padding: 10px;
+        }
+
+        #game-over-text {
+            color: #d4af37;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .restart-button {
+            background-color: #5a3d1f;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px auto;
+            font-weight: bold;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <h1>Bienvenue dans "Découverte du feu" !</h1>
+        <h2>L'aventure commence...</h2>
+        <p>Prêt à relever le défi ? Clique sur le bouton ci-dessous pour commencer ton voyage !</p>
+        <button class="start-button" onclick="startAdventure()">
+            Commencer l'aventure
+        </button>
+    </div>
+
+    <!-- Conteneur pour l'animation -->
+    <div id="animation-container">
+        <img id="zoom-image" src="images/paysage.jpg" alt="Paysage">
+        <div id="bonne-aventure">Bonne Aventure!</div>
+    </div>
+
+    <!-- Conteneur pour le Game Over -->
+    <div id="game-over-container">
+        <div id="game-over-text">Tu es mort !!!</div>
+        <img id="game-over-image" src="images/mort_personnage.jpg" alt="Game Over">
+        <button class="restart-button" onclick="window.location.href='slide4.html'">
+            Recommencer
+        </button>
+    </div>
+
+    <script>
+        function startAdventure() {
+            const animationContainer = document.getElementById("animation-container");
+            const zoomImage = document.getElementById("zoom-image");
+            const bonneAventure = document.getElementById("bonne-aventure");
+
+            // Affiche l'animation
+            animationContainer.style.display = "flex";
+
+            // Déclenche l'animation de zoom
+            setTimeout(() => {
+                zoomImage.style.transform = "scale(1)";
+            }, 10);
+
+            // Affiche le message "Bonne Aventure!" après 2.5 secondes
+            setTimeout(() => {
+                bonneAventure.style.opacity = "1";
+            }, 2500);
+
+            // Redirige vers la slide 5 après 6.5 secondes
+            setTimeout(() => {
+                window.location.href = 'slide5.html?force=2&faim=2&intelligence=0&vitalite=2';
+            }, 6500);
+        }
+    </script>
+</body>
+</html>

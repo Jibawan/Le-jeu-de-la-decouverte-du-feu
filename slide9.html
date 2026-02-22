@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 9 - Le tigre vous attaque</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .slide-container {
+            position: relative;
+            padding-top: 80px;
+            text-align: center;
+        }
+
+        .slide-image {
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(89, 61, 31, 0.3);
+            padding: 10px;
+        }
+
+        .choice-button {
+            background-color: #5a3d1f;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px auto;
+            font-weight: bold;
+            display: block;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .choice-button:hover {
+            background-color: #d4af37;
+            color: #121212;
+        }
+
+        #result {
+            display: none;
+            text-align: center;
+            margin: 20px auto;
+            color: #d4af37;
+            font-size: 1.2em;
+        }
+
+        .fire-icon, .lance-icon, .peau-tigre-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 5px;
+            border-radius: 50%;
+            border: 1px solid #d4af37;
+            background-color: rgba(89, 61, 31, 0.3);
+            display: inline-block;
+        }
+
+        .fire-icon img, .lance-icon img, .peau-tigre-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        #peau-tigre-image {
+            display: none;
+            max-width: 200px;
+            margin: 20px auto;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(89, 61, 31, 0.3);
+            padding: 10px;
+        }
+
+        #game-over-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            flex-direction: column;
+        }
+
+        #game-over-image {
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(89, 61, 31, 0.3);
+            padding: 10px;
+        }
+
+        #game-over-text {
+            color: #d4af37;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .restart-button {
+            background-color: #5a3d1f;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px auto;
+            font-weight: bold;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Barre des critères en haut -->
+        <div class="criteria-bar" id="criteriaBar">
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/force.jpg" alt="Force">
+                </div>
+                <span class="score" id="forceScore">2</span>
+            </div>
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/faim.jpg" alt="Faim">
+                </div>
+                <span class="score" id="faimScore">2</span>
+            </div>
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/intelligence.jpg" alt="Intelligence">
+                </div>
+                <span class="score" id="intelligenceScore">0</span>
+            </div>
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/vitalite.jpg" alt="Vitalité">
+                </div>
+                <span class="score" id="vitaliteScore">2</span>
+            </div>
+            <!-- Icône pour le feu -->
+            <div class="criteria-item-top" id="fireItem" style="display: none;">
+                <div class="fire-icon">
+                    <img src="images/feu.jpg" alt="Feu">
+                </div>
+            </div>
+            <!-- Icône pour la lance réparée -->
+            <div class="criteria-item-top" id="lanceItem" style="display: none;">
+                <div class="lance-icon">
+                    <img src="images/lance_reparee.jpg" alt="Lance Réparée">
+                </div>
+            </div>
+            <!-- Icône pour la peau de tigre -->
+            <div class="criteria-item-top" id="peauTigreItem" style="display: none;">
+                <div class="peau-tigre-icon">
+                    <img src="images/peau_tigre.jpg" alt="Peau de Tigre">
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenu initial -->
+        <div id="initialContent">
+            <h1>Le tigre vous attaque...</h1>
+            <img class="slide-image" src="images/tigre_attaque.jpg" alt="Tigre à dent de sabre">
+            <button class="choice-button" onclick="makeChoice(1)">
+                Affronter le tigre
+            </button>
+        </div>
+
+        <!-- Image de la peau de tigre -->
+        <img id="peau-tigre-image" src="images/peau_tigre.jpg" alt="Peau de Tigre">
+
+        <!-- Contenu résultat (caché au départ) -->
+        <div id="result"></div>
+    </div>
+
+    <!-- Conteneur pour le Game Over -->
+    <div id="game-over-container">
+        <div id="game-over-text">Tu es mort !!!</div>
+        <img id="game-over-image" src="images/mort_personnage.jpg" alt="Game Over">
+        <button class="restart-button" onclick="window.location.href='slide4.html'">
+            Recommencer
+        </button>
+    </div>
+
+    <script>
+        // Récupère les scores, l'état du feu et de la lance depuis l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("forceScore").textContent = urlParams.get('force') || '2';
+        document.getElementById("faimScore").textContent = urlParams.get('faim') || '2';
+        document.getElementById("intelligenceScore").textContent = urlParams.get('intelligence') || '0';
+        document.getElementById("vitaliteScore").textContent = urlParams.get('vitalite') || '2';
+
+        // Vérifie si le joueur a le feu
+        if (urlParams.get('feu') === 'true') {
+            document.getElementById("fireItem").style.display = "flex";
+        }
+
+        // Vérifie si le joueur a la lance réparée
+        if (urlParams.get('lance') === 'true') {
+            document.getElementById("lanceItem").style.display = "flex";
+        }
+
+        // Vérifie le Game Over au chargement de la page
+        let force = parseInt(document.getElementById("forceScore").textContent);
+        let faim = parseInt(document.getElementById("faimScore").textContent);
+        let intelligence = parseInt(document.getElementById("intelligenceScore").textContent);
+        let vitalite = parseInt(document.getElementById("vitaliteScore").textContent);
+        checkGameOver(force, faim, vitalite);
+
+        function makeChoice(choice) {
+            const resultDiv = document.getElementById("result");
+            const initialContentDiv = document.getElementById("initialContent");
+            const peauTigreImage = document.getElementById("peau-tigre-image");
+
+            // Cache le contenu initial
+            initialContentDiv.style.display = "none";
+
+            // Affiche le résultat
+            resultDiv.style.display = "block";
+
+            // Met à jour les scores selon le choix
+            let feu = urlParams.get('feu') === 'true';
+            let lance = urlParams.get('lance') === 'true';
+
+            if (force >= 3 && vitalite >= 3 && feu && lance) {
+                resultDiv.innerHTML = "<p>Vous le combattez et gagnez le combat. Vous obtenez 2 jetons force, 2 jetons vitalité, 3 jetons nourriture et une peau de tigre.</p>";
+                force += 2;
+                vitalite += 2;
+                faim += 3;
+                document.getElementById("peauTigreItem").style.display = "flex";
+                peauTigreImage.style.display = "block";
+            } else if (force >= 3 && vitalite >= 3 && feu) {
+                resultDiv.innerHTML = "<p>Vous lui échappez en l'effrayant. Vous perdez un jeton vitalité et gagnez deux jetons intelligence.</p>";
+                vitalite -= 1;
+                intelligence += 2;
+            } else {
+                resultDiv.innerHTML = "<p>Le tigre vous mange. Vous perdez Homo Erectus.</p>";
+                force = 0;
+            }
+
+            // Met à jour les scores affichés
+            document.getElementById("forceScore").textContent = force;
+            document.getElementById("vitaliteScore").textContent = vitalite;
+            document.getElementById("intelligenceScore").textContent = intelligence;
+            document.getElementById("faimScore").textContent = faim;
+
+            // Vérifie le Game Over
+            checkGameOver(force, faim, vitalite);
+
+            // Affiche un bouton pour continuer avec les scores dans l'URL
+            let peauTigre = document.getElementById("peauTigreItem").style.display === "flex" ? 'true' : 'false';
+            if (force > 0) {
+                resultDiv.innerHTML += `<button class="choice-button" onclick="window.location.href='slide10.html?force=${force}&faim=${faim}&intelligence=${intelligence}&vitalite=${vitalite}&feu=${feu}&lance=${lance}&peauTigre=${peauTigre}'">Continuer</button>`;
+            }
+        }
+
+        function checkGameOver(force, faim, vitalite) {
+            if (force <= 0 || faim <= 0 || vitalite <= 0) {
+                document.getElementById("game-over-container").style.display = "flex";
+            }
+        }
+    </script>
+</body>
+</html>

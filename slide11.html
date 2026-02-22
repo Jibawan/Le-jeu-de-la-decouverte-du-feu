@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 11 - Fin du jeu</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #d4af37;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide-container {
+            text-align: center;
+            padding: 20px;
+            max-width: 800px;
+        }
+
+        .slide-image {
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(89, 61, 31, 0.3);
+            padding: 10px;
+        }
+
+        .end-button {
+            background-color: #5a3d1f;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px auto;
+            font-weight: bold;
+            display: block;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .end-button:hover {
+            background-color: #d4af37;
+            color: #121212;
+        }
+
+        #alternative-end {
+            display: none;
+            text-align: center;
+            margin: 20px auto;
+            font-size: 1.2em;
+        }
+
+        #alternative-image {
+            display: none;
+            max-width: 300px;
+            margin: 20px auto;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(89, 61, 31, 0.3);
+            padding: 10px;
+        }
+
+        .credit {
+            margin-top: 40px;
+            font-size: 1.2em;
+            color: #d4af37;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <h1>En rejoignant la fumée, vous découvrez une tribu d’homo erectus.</h1>
+        <p>Votre voyage est terminé.</p>
+        <img class="slide-image" src="images/tribu.jpg" alt="Tribu d'homo erectus">
+        <button class="end-button" onclick="showEnd()">
+            Fin
+        </button>
+        <div id="alternative-end">
+            <p>La tribu vous voit arriver avec une cape faite avec la peau du tigre à dent de sabre. Elle vous considère immédiatement comme leur nouveau chef.</p>
+            <img id="alternative-image" src="images/homme_couronne.jpg" alt="Nouveau chef">
+        </div>
+        <div class="credit">
+            <p>Jeu créé grâce à Mistral AI par Vorillion Jean-Baptiste</p>
+        </div>
+    </div>
+
+    <script>
+        // Récupère les paramètres de l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const peauTigre = urlParams.get('peauTigre') === 'true';
+
+        function showEnd() {
+            const endButton = document.querySelector('.end-button');
+            endButton.style.display = 'none';
+
+            if (peauTigre) {
+                document.getElementById('alternative-end').style.display = 'block';
+                document.getElementById('alternative-image').style.display = 'block';
+            }
+
+            // Ajoute un bouton pour retourner à la slide 1 après quelques secondes
+            setTimeout(() => {
+                const restartButton = document.createElement('button');
+                restartButton.className = 'end-button';
+                restartButton.textContent = 'Recommencer';
+                restartButton.onclick = () => window.location.href = 'slide1.html';
+                document.querySelector('.slide-container').appendChild(restartButton);
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

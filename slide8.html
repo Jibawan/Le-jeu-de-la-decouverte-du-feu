@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 8 - Le tigre s'approche</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .slide-container {
+            position: relative;
+            padding-top: 80px;
+            text-align: center;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .slide-image {
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(89, 61, 31, 0.3);
+            padding: 10px;
+        }
+
+        .choice-button {
+            background-color: #5a3d1f;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px auto;
+            font-weight: bold;
+            display: block;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .choice-button:hover {
+            background-color: #d4af37;
+            color: #121212;
+        }
+
+        #result {
+            display: none;
+            text-align: center;
+            margin: 20px auto;
+            color: #d4af37;
+            font-size: 1.2em;
+        }
+
+        .fire-icon, .lance-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 5px;
+            border-radius: 50%;
+            border: 1px solid #d4af37;
+            background-color: rgba(89, 61, 31, 0.3);
+            display: inline-block;
+        }
+
+        .fire-icon img, .lance-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        #animation-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+
+        .paw-print {
+            position: absolute;
+            width: 100px;
+            height: auto;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        #choices-container {
+            display: none;
+        }
+
+        #game-over-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            flex-direction: column;
+        }
+
+        #game-over-image {
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(89, 61, 31, 0.3);
+            padding: 10px;
+        }
+
+        #game-over-text {
+            color: #d4af37;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .restart-button {
+            background-color: #5a3d1f;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px auto;
+            font-weight: bold;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Barre des critères en haut -->
+        <div class="criteria-bar" id="criteriaBar">
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/force.jpg" alt="Force">
+                </div>
+                <span class="score" id="forceScore">2</span>
+            </div>
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/faim.jpg" alt="Faim">
+                </div>
+                <span class="score" id="faimScore">2</span>
+            </div>
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/intelligence.jpg" alt="Intelligence">
+                </div>
+                <span class="score" id="intelligenceScore">0</span>
+            </div>
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/vitalite.jpg" alt="Vitalité">
+                </div>
+                <span class="score" id="vitaliteScore">2</span>
+            </div>
+            <!-- Icône pour le feu -->
+            <div class="criteria-item-top" id="fireItem" style="display: none;">
+                <div class="fire-icon">
+                    <img src="images/feu.jpg" alt="Feu">
+                </div>
+            </div>
+            <!-- Icône pour la lance réparée -->
+            <div class="criteria-item-top" id="lanceItem" style="display: none;">
+                <div class="lance-icon">
+                    <img src="images/lance_reparee.jpg" alt="Lance Réparée">
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenu initial -->
+        <div id="initialContent">
+            <h1>Au petit matin, la pluie s'arrête et vous reprenez votre voyage...</h1>
+            <p>Sur la route vous remarquez des traces de pattes correspondantes au terrible tigre à dent de sabre...</p>
+            <div id="animation-container">
+                <!-- Les images des traces de pattes seront ajoutées ici par JavaScript -->
+            </div>
+            <div id="choices-container">
+                <p>Le tigre risque de vous attaquer bientôt:</p>
+                <button class="choice-button" onclick="makeChoice(1)">
+                    Vous vous arrêtez pour vous préparer.
+                </button>
+                <button class="choice-button" onclick="makeChoice(2)">
+                    Vous courez pour lui échapper.
+                </button>
+            </div>
+        </div>
+
+        <!-- Contenu résultat (caché au départ) -->
+        <div id="result"></div>
+    </div>
+
+    <!-- Conteneur pour le Game Over -->
+    <div id="game-over-container">
+        <div id="game-over-text">Tu es mort !!!</div>
+        <img id="game-over-image" src="images/mort_personnage.jpg" alt="Game Over">
+        <button class="restart-button" onclick="window.location.href='slide4.html'">
+            Recommencer
+        </button>
+    </div>
+
+    <script>
+        // Récupère les scores, l'état du feu et de la lance depuis l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("forceScore").textContent = urlParams.get('force') || '2';
+        document.getElementById("faimScore").textContent = urlParams.get('faim') || '2';
+        document.getElementById("intelligenceScore").textContent = urlParams.get('intelligence') || '0';
+        document.getElementById("vitaliteScore").textContent = urlParams.get('vitalite') || '2';
+
+        // Vérifie si le joueur a le feu
+        if (urlParams.get('feu') === 'true') {
+            document.getElementById("fireItem").style.display = "flex";
+        }
+
+        // Vérifie si le joueur a la lance réparée
+        if (urlParams.get('lance') === 'true') {
+            document.getElementById("lanceItem").style.display = "flex";
+        }
+
+        // Vérifie le Game Over au chargement de la page
+        let force = parseInt(document.getElementById("forceScore").textContent);
+        let faim = parseInt(document.getElementById("faimScore").textContent);
+        let vitalite = parseInt(document.getElementById("vitaliteScore").textContent);
+        checkGameOver(force, faim, vitalite);
+
+        // Animation des traces de pattes
+        function animatePawPrints() {
+            const container = document.getElementById('animation-container');
+            const pawPrintsCount = 8; // Augmenté à 8 pour couvrir toute la ligne
+            const delayBetweenPrints = 800; // Délai entre chaque empreinte en ms
+
+            for (let i = 0; i < pawPrintsCount; i++) {
+                setTimeout(() => {
+                    const pawPrint = document.createElement('img');
+                    pawPrint.src = 'images/traces_pattes.jpg';
+                    pawPrint.className = 'paw-print';
+                    pawPrint.style.left = `${i * 100}px`;
+                    pawPrint.style.bottom = `${50 + (i % 2) * 20}px`;
+                    pawPrint.style.opacity = '1';
+                    container.appendChild(pawPrint);
+
+                    if (i === pawPrintsCount - 1) {
+                        setTimeout(() => {
+                            document.getElementById('choices-container').style.display = 'block';
+                        }, 1000);
+                    }
+                }, i * delayBetweenPrints);
+            }
+        }
+
+        // Démarre l'animation au chargement de la page
+        animatePawPrints();
+
+        function makeChoice(choice) {
+            const resultDiv = document.getElementById("result");
+            const initialContentDiv = document.getElementById("initialContent");
+
+            // Cache le contenu initial
+            initialContentDiv.style.display = "none";
+
+            // Affiche le résultat
+            resultDiv.style.display = "block";
+
+            // Met à jour les scores selon le choix
+            force = parseInt(document.getElementById("forceScore").textContent);
+            faim = parseInt(document.getElementById("faimScore").textContent);
+            let intelligence = parseInt(document.getElementById("intelligenceScore").textContent);
+            vitalite = parseInt(document.getElementById("vitaliteScore").textContent);
+            let feu = urlParams.get('feu') === 'true';
+            let lance = urlParams.get('lance') === 'true';
+
+            if (choice === 1) {
+                if (lance) {
+                    resultDiv.innerHTML = "<p>Si vous avez 1 jeton intelligence, les outils peuvent vous servir à réparer votre lance et vous pouvez désormais faire du feu.</p>";
+                    if (intelligence >= 1) {
+                        resultDiv.innerHTML += "<p>Vous reprenez 1 jeton force, 1 jeton vitalité et 1 jeton nourriture.</p>";
+                        force += 1;
+                        vitalite += 1;
+                        faim += 1;
+                    }
+                } else {
+                    resultDiv.innerHTML = "<p>Vous récupérez 1 jeton force et 1 jeton vitalité.</p>";
+                    force += 1;
+                    vitalite += 1;
+                }
+            } else if (choice === 2) {
+                resultDiv.innerHTML = "<p>Vous perdez 1 jeton vitalité et 1 jeton force.</p>";
+                force -= 1;
+                vitalite -= 1;
+            }
+
+            // Met à jour les scores affichés
+            document.getElementById("forceScore").textContent = force;
+            document.getElementById("vitaliteScore").textContent = vitalite;
+            document.getElementById("faimScore").textContent = faim;
+
+            // Vérifie le Game Over
+            checkGameOver(force, faim, vitalite);
+
+            // Affiche un bouton pour continuer avec les scores dans l'URL
+            resultDiv.innerHTML += `<button class="choice-button" onclick="window.location.href='slide9.html?force=${force}&faim=${faim}&intelligence=${intelligence}&vitalite=${vitalite}&feu=${feu}&lance=${lance}'">Continuer</button>`;
+        }
+
+        function checkGameOver(force, faim, vitalite) {
+            if (force <= 0 || faim <= 0 || vitalite <= 0) {
+                document.getElementById("game-over-container").style.display = "flex";
+            }
+        }
+    </script>
+</body>
+</html>

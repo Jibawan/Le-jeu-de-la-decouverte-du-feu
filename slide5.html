@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 5 - Rencontre avec un lapin mort</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .slide-container {
+            position: relative;
+            padding-top: 80px;
+            text-align: center;
+        }
+
+        .slide-image {
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(89, 61, 31, 0.3);
+            padding: 10px;
+        }
+
+        .choice-button {
+            background-color: #5a3d1f;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px auto;
+            font-weight: bold;
+            display: block;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .choice-button:hover {
+            background-color: #d4af37;
+            color: #121212;
+        }
+
+        #result {
+            display: none;
+            text-align: center;
+            margin: 20px auto;
+            color: #d4af37;
+            font-size: 1.2em;
+        }
+
+        #game-over-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            flex-direction: column;
+        }
+
+        #game-over-image {
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(89, 61, 31, 0.3);
+            padding: 10px;
+        }
+
+        #game-over-text {
+            color: #d4af37;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .restart-button {
+            background-color: #5a3d1f;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px auto;
+            font-weight: bold;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Barre des critères en haut -->
+        <div class="criteria-bar" id="criteriaBar">
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/force.jpg" alt="Force">
+                </div>
+                <span class="score" id="forceScore">2</span>
+            </div>
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/faim.jpg" alt="Faim">
+                </div>
+                <span class="score" id="faimScore">2</span>
+            </div>
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/intelligence.jpg" alt="Intelligence">
+                </div>
+                <span class="score" id="intelligenceScore">0</span>
+            </div>
+            <div class="criteria-item-top">
+                <div class="criteria-icon-top">
+                    <img src="images/vitalite.jpg" alt="Vitalité">
+                </div>
+                <span class="score" id="vitaliteScore">2</span>
+            </div>
+        </div>
+
+        <!-- Contenu initial -->
+        <div id="initialContent">
+            <h1>Tu trouves un lapin mort</h1>
+            <img class="slide-image" src="images/lapin_mort.jpg" alt="Lapin mort">
+            <p>Que fais-tu ?</p>
+            <button class="choice-button" onclick="makeChoice(1)">
+                Vous le prenez et vous vous nourrissez avec immédiatement.
+            </button>
+            <button class="choice-button" onclick="makeChoice(2)">
+                Vous le laissez en espérant trouver à manger plus tard.
+            </button>
+        </div>
+
+        <!-- Contenu résultat (caché au départ) -->
+        <div id="result"></div>
+    </div>
+
+    <!-- Conteneur pour le Game Over -->
+    <div id="game-over-container">
+        <div id="game-over-text">Tu es mort !!!</div>
+        <img id="game-over-image" src="images/mort_personnage.jpg" alt="Game Over">
+        <button class="restart-button" onclick="window.location.href='slide4.html'">
+            Recommencer
+        </button>
+    </div>
+
+    <script>
+        // Récupère les scores depuis l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("forceScore").textContent = urlParams.get('force') || '2';
+        document.getElementById("faimScore").textContent = urlParams.get('faim') || '2';
+        document.getElementById("intelligenceScore").textContent = urlParams.get('intelligence') || '0';
+        document.getElementById("vitaliteScore").textContent = urlParams.get('vitalite') || '2';
+
+        function makeChoice(choice) {
+            const resultDiv = document.getElementById("result");
+            const initialContentDiv = document.getElementById("initialContent");
+
+            // Cache le contenu initial
+            initialContentDiv.style.display = "none";
+
+            // Affiche le résultat
+            resultDiv.style.display = "block";
+
+            // Met à jour les scores selon le choix
+            let force = parseInt(document.getElementById("forceScore").textContent);
+            let faim = parseInt(document.getElementById("faimScore").textContent);
+            let intelligence = parseInt(document.getElementById("intelligenceScore").textContent);
+            let vitalite = parseInt(document.getElementById("vitaliteScore").textContent);
+
+            if (choice === 1) {
+                resultDiv.innerHTML = "<p>Vous gagnez 1 jeton nourriture, mais vous perdez 1 jeton force et 1 jeton vitalité car la nourriture a très mauvais goût.</p>";
+                faim += 1;
+                force -= 1;
+                vitalite -= 1;
+            } else if (choice === 2) {
+                resultDiv.innerHTML = "<p>Vous perdez 1 jeton nourriture.</p>";
+                faim -= 1;
+            }
+
+            // Met à jour les scores affichés
+            document.getElementById("forceScore").textContent = force;
+            document.getElementById("faimScore").textContent = faim;
+            document.getElementById("vitaliteScore").textContent = vitalite;
+
+            // Vérifie le Game Over
+            checkGameOver(force, faim, vitalite);
+
+            // Affiche un bouton pour continuer
+            resultDiv.innerHTML += `<button class="choice-button" onclick="window.location.href='slide6.html?force=${force}&faim=${faim}&intelligence=${intelligence}&vitalite=${vitalite}'">Continuer</button>`;
+        }
+
+        function checkGameOver(force, faim, vitalite) {
+            if (force <= 0 || faim <= 0 || vitalite <= 0) {
+                document.getElementById("game-over-container").style.display = "flex";
+            }
+        }
+    </script>
+</body>
+</html>
